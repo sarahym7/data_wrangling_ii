@@ -109,3 +109,70 @@ drug_use_html %>%
   slice(-1) %>% 
   as_tibble()
 ```
+
+Now lets shift and try to get a non-table collection of data from the
+website
+
+Suppose we’d like to scrape the data about the Star Wars Movies from the
+IMDB page. The first step is the same as before – we need to get the
+HTML.
+
+## Star Wars Movie Info
+
+I want the data from [here](https://www.imdb.com/list/ls070150896/)
+
+``` r
+swm_html = 
+  read_html("https://www.imdb.com/list/ls070150896/")
+
+#can also do this 
+
+url = "https://www.imdb.com/list/ls070150896/"
+
+swm_html = read_html(url)
+```
+
+The information isn’t stored in a handy table, so we’re going to isolate
+the CSS selector for elements we care about. A bit of clicking around
+gets me something like below.
+
+Grab elements that we want: - before said give me the tables but we dont
+know the css tag imdb for movie titles. We willfocus on titles and make
+a vector. Get the star wars html and extract
+
+``` r
+title_vecs = 
+  swm_html |>
+  html_nodes(".lister-item-header a") %>% 
+  html_text()#because its not a table with info we dont know which css function, so use selector gadget page, this isnt working so other option 
+
+title_vec = 
+  swm_html %>% 
+  html_elements(".lister-item-header a") %>% 
+  html_text()
+
+
+gross_rev_vec = 
+  swm_html |>
+  html_elements(".text-small:nth-child(7) span:nth-child(5)") |>
+  html_text()
+
+runtime_vec = 
+  swm_html |>
+  html_elements(".runtime") |>
+  html_text()
+
+swm_df = 
+  tibble(
+    title = title_vec,
+    rev = gross_rev_vec,
+    runtime = runtime_vec)
+```
+
+We need to extract some bit of css for the movie title on page, click
+selector gadget and scroll through will highlight boxes of content and
+paths. Click on smallest box that includes what we care about. unclick
+things that show up unrelated that you want. Then selector will tell you
+the package to use.video lecure 32:04.
+
+STOPPED AT 33.45
