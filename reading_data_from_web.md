@@ -79,7 +79,7 @@ table_marj =
 
 print(table_marj)
 
-# other example 
+# other example but doesnt work 
 
 drug_use_html %>% 
   html_nodes(css = "table") %>% 
@@ -101,7 +101,7 @@ table_marj =
 table_marj
 #notice that data is stored as characters also some superscripts, subscripts, data not necessarily tidy, very least we pulled data from the internet
 
-# other 
+# other but doesnt run
 drug_use_html %>% 
   html_nodes(css= "table") %>% 
   first() %>% 
@@ -129,7 +129,7 @@ swm_html =
 
 url = "https://www.imdb.com/list/ls070150896/"
 
-swm_html = read_html(url)
+swm_htmls = read_html(url)
 ```
 
 The information isn’t stored in a handy table, so we’re going to isolate
@@ -141,31 +141,51 @@ know the css tag imdb for movie titles. We willfocus on titles and make
 a vector. Get the star wars html and extract
 
 ``` r
-title_vecs = 
-  swm_html |>
-  html_nodes(".lister-item-header a") %>% 
-  html_text()#because its not a table with info we dont know which css function, so use selector gadget page, this isnt working so other option 
-
-title_vec = 
+title_vectors_ex_one = 
   swm_html %>% 
-  html_elements(".lister-item-header a") %>% 
-  html_text()
-
+  html_nodes(css=".lister-item-header a") %>% 
+  html_text()#because its not a table with info we dont know which css function, so use selector gadget page
 
 gross_rev_vec = 
-  swm_html |>
-  html_elements(".text-small:nth-child(7) span:nth-child(5)") |>
+  swm_html %>% 
+  html_nodes(css=".text-small:nth-child(7) span:nth-child(5)") %>% 
+  html_text()
+
+runtime_vec= 
+  swm_html %>% 
+  html_nodes(css=".runtime") %>% 
+  html_text()
+
+#putting it all together 
+
+swm_df_video= 
+  tibble(
+    tibble= title_vec,
+    gross_rev_vec = gross_rev_vec,
+    runtime_vec = runtime_vec
+  )
+```
+
+``` r
+title_vec = 
+  swm_html %>% 
+  html_elements(".ipc-title-link-wrapper .ipc-title__text") %>% 
+  html_text()
+
+metascore_vec = 
+  swm_html %>% 
+  html_elements(".metacritic-score-box") %>% 
   html_text()
 
 runtime_vec = 
-  swm_html |>
-  html_elements(".runtime") |>
-  html_text()
+  swm_html %>% 
+  html_elements(".dli-title-metadata-item:nth-child(2)") %>% #knowing how long the movies are, find elements associated                                                                #with runtime pull it out and 
+  html_text()   #convert to text
 
 swm_df = 
   tibble(
     title = title_vec,
-    rev = gross_rev_vec,
+    score = metascore_vec,
     runtime = runtime_vec)
 ```
 
@@ -173,6 +193,4 @@ We need to extract some bit of css for the movie title on page, click
 selector gadget and scroll through will highlight boxes of content and
 paths. Click on smallest box that includes what we care about. unclick
 things that show up unrelated that you want. Then selector will tell you
-the package to use.video lecure 32:04.
-
-STOPPED AT 33.45
+the package to use.video
