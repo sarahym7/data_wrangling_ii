@@ -223,6 +223,21 @@ brfss_2010 =
   content("parsed")
 ```
 
+## Some data aren’t so nice
+
+``` r
+pokemon_data = 
+  GET("http://pokeapi.co/api/v2/pokemon/1") %>%  
+  content()
+#if we just take this and try to extra content will give a long structured collection of the output. can also get structured nested in structure. accessing data first part of problem 
+
+#easy things to get 
+
+pokemon_data$name 
+pokemon_data$height
+pokemon_data$abilities
+```
+
 ``` r
 nyc_water = 
   GET("https://data.cityofnewyork.us/resource/ia2d-e54m.json") |> #json structure is v different, use json instead of csv if we want second variable as a collection of things

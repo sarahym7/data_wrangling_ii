@@ -218,8 +218,27 @@ brfss_2010 =
       query = list("$limit" = 5000)) |> #use the limit for socrata API default is 1000 , $offset default is 0.we know we have to use list, so set up query as a list where $limit =5000 and hopefully it makes the request of 5000 rows and its unlimited so we can go up to 150k
   content("parsed")
 
+```
+
+## Some data aren't so nice 
+
+```{r pokemon, eval=FALSE}
+pokemon_data = 
+  GET("http://pokeapi.co/api/v2/pokemon/1") %>%  
+  content()
+#if we just take this and try to extra content will give a long structured collection of the output. can also get structured nested in structure. accessing data first part of problem 
+
+#easy things to get 
+
+pokemon_data$name 
+pokemon_data$height
+pokemon_data$abilities
+
+
 
 ```
+
+
 
 ```{r notes_example, eval=FALSE}
 
