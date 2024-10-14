@@ -187,11 +187,63 @@ swm_df =
 We need to extract some bit of css for the movie title 
 on page, click selector gadget and scroll through will highlight boxes of content and paths. Click on smallest box that includes what we care about. unclick things that show up unrelated that you want. Then selector will tell you the package to use.video 
 
-```{r}
+## Using API 
+request ap and export as CSV
+
+The following is from the API
+GET  in package want you tell them the API you care about
+```{r nyc_water, eval=FALSE}
+
+nyc_water = 
+  GET("https://data.cityofnewyork.us/resource/ia2d-e54m.csv") %>%  #we got a csv but to work with we need an xtra step
+  content("parsed")   #same way we got HTML and needed to parse to go from table to tibble need content step to parse.
+                        #we can be more specific on kind of way we want content
+
 
 ```
 
 
+
+## BRFSS data 
+go to the cdc dataset 
+look at data.gov a lot info from api, we can export an entire dataset but they get updated so use API
+acess via soda api and straight to CSV
+query, path etc are functions that APIs use 
+run ?GET and provides several other examples
+
+```{r, eval=FALSE}
+
+brfss_2010 = 
+  GET("https://chronicdata.cdc.gov/resource/acme-vg9e.csv",  #bad news we have 1000 rows and in cdc says 140k
+      query = list("$limit" = 5000)) |> #use the limit for socrata API default is 1000 , $offset default is 0.we know we have to use list, so set up query as a list where $limit =5000 and hopefully it makes the request of 5000 rows and its unlimited so we can go up to 150k
+  content("parsed")
+
+
+```
+
+```{r notes_example, eval=FALSE}
+
+nyc_water = 
+  GET("https://data.cityofnewyork.us/resource/ia2d-e54m.json") |> #json structure is v different, use json instead of csv if we want second variable as a collection of things
+  content("text") |>  #cant parse, instead use the text from json which looks worse 
+  jsonlite::fromJSON() |>  #we can parse if we use json lite and makes look like a df now 
+  as_tibble()  #convert to a tibble 
+
+brfss_smart2010 = 
+  GET("https://chronicdata.cdc.gov/resource/acme-vg9e.csv",
+      query = list("$limit" = 5000)) |> 
+  content("parsed")
+
+poke = 
+  GET("http://pokeapi.co/api/v2/pokemon/1") |>
+  content()
+
+poke[["name"]]
+
+poke[["height"]]
+
+poke[["abilities"]]
+```
 
 
 
