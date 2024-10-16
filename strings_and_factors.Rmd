@@ -1,0 +1,8 @@
+---
+title: "Strings and Factors"
+author: "Sarahy Martinez"
+date: "2024-10-16"
+output: github_document
+---
+
+
